@@ -1,0 +1,10 @@
+.sidenav {
+  padding: 16px;
+  border-right: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sidenav .me { display: flex; gap: 10px; align-items: center; }
+.sidenav img { border-radius: 50%; }
+button.logout { background: #a00; margin-top: auto; }

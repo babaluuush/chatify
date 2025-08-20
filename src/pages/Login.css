@@ -1,0 +1,11 @@
+/* Samma stil som Register */
+.auth-card {
+  max-width: 720px;
+  margin: 48px auto;
+  padding: 16px;
+}
+.auth-card form { display: flex; gap: 8px; flex-wrap: wrap; }
+.auth-card input {
+  flex: 1; min-width: 220px; padding: 10px;
+  border: 1px solid #ccc; border-radius: 8px;
+}

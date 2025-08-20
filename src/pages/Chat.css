@@ -1,0 +1,17 @@
+.chat { max-width: 720px; margin: 0 auto; padding: 16px; }
+
+.composer { display: flex; gap: 8px; margin-bottom: 18px; }
+.composer input {
+  flex: 1; min-width: 220px; padding: 10px;
+  border: 1px solid #ccc; border-radius: 8px;
+}
+
+.messages { display: flex; flex-direction: column; gap: 10px; }
+
+.bubble { max-width: 70%; padding: 10px 12px; border-radius: 14px; }
+.bubble.theirs { align-self: flex-start; background: #f1f1f1; }
+.bubble.mine { align-self: flex-end; background: #d7f0ff; position: relative; }
+.bubble .del {
+  position: absolute; top: -8px; right: -8px;
+  border-radius: 16px; padding: 6px 8px;
+}
