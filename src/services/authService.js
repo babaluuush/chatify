@@ -14,7 +14,6 @@ export async function ensureCsrf() {
   if (!csrfToken) {
     const res = await fetch(`${API_BASE}/csrf`, {
       method: "PATCH",
-      credentials: "include",
     });
     const data = await res.json();
     csrfToken = data.csrfToken;
@@ -22,7 +21,6 @@ export async function ensureCsrf() {
   return csrfToken;
 }
 
-// Storage helpers
 export function loadAuth() {
   const token = localStorage.getItem("token");
   if (!token) return null;
@@ -48,8 +46,7 @@ export async function registerUser({ username, email, password }) {
   await ensureCsrf();
   const res = await api.post(
     "/auth/register",
-    { username, email, password },
-    { headers: { "X-CSRF-Token": csrfToken } }
+    { username, email, password, csrfToken },
   );
   return res.data;
 }
@@ -57,8 +54,7 @@ export async function loginUser({ username, password }) {
   await ensureCsrf();
   const res = await api.post(
     "/auth/token",
-    { username, password },
-    { headers: { "X-CSRF-Token": csrfToken } }
+    { username, password, csrfToken },
   );
   return res.data;
 }
@@ -80,7 +76,6 @@ export async function createMessage({ text }) {
     {
       headers: {
         Authorization: `Bearer ${token}`,
-        "X-CSRF-Token": csrfToken,
       },
     }
   );
@@ -92,7 +87,6 @@ export async function deleteMessage(id) {
   await api.delete(`/messages/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      "X-CSRF-Token": csrfToken,
     },
   });
 }
