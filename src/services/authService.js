@@ -41,7 +41,6 @@ export function clearAuth() {
   localStorage.removeItem("token");
 }
 
-// Auth
 export async function registerUser({ username, email, password }) {
   await ensureCsrf();
   const res = await api.post(
@@ -58,8 +57,6 @@ export async function loginUser({ username, password }) {
   );
   return res.data;
 }
-
-// Messages
 export async function getMessages() {
   const token = localStorage.getItem("token");
   const res = await api.get("/messages", {

@@ -6,6 +6,13 @@ import { getMessages, createMessage, deleteMessage } from "../services/authServi
 
 export default function Chat() {
   const { auth } = useAuth();
+
+  const [fakeChat] = useState([
+    { text: "Tja tja, hur mår du?", avatar: "https://i.pravatar.cc/100?img=14", username: "Johnny" },
+    { text: "Hallå!! Svara då!!", avatar: "https://i.pravatar.cc/100?img=14", username: "Johnny" },
+    { text: "Sover du eller?! 😴", avatar: "https://i.pravatar.cc/100?img=14", username: "Johnny" },
+  ]);
+
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
 
@@ -31,13 +38,13 @@ export default function Chat() {
     e.preventDefault();
     if (!text.trim()) return;
     const clean = DOMPurify.sanitize(text, { ALLOWED_TAGS: ["b","i","em","strong","a","br"] });
-    await createMessage({ text: clean }); // byt fält om API:t kräver
+    await createMessage({ text: clean });
     setText("");
     await load();
   }
 
   async function onDelete(id) {
-    await deleteMessage(id);
+    await deleteMessage(id)
     await load();
   }
 
@@ -45,7 +52,7 @@ export default function Chat() {
     <div className="chat">
       <form className="composer" onSubmit={onSend}>
         <input
-          placeholder="Skriv ett meddelande..."
+          placeholder="Skriv ett meddelande…"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
@@ -53,24 +60,41 @@ export default function Chat() {
       </form>
 
       <div className="messages">
+        {fakeChat.map((m, i) => (
+          <Bubble
+            key={`fake-${i}`}
+            mine={false}
+            avatar={m.avatar}
+            username={m.username}
+            dangerouslyHtml={m.text}
+          />
+        ))}
+
         {messages.map((m) => (
-          <MessageBubble
+          <Bubble
             key={m.id}
             mine={isMine(m)}
             onDelete={isMine(m) ? () => onDelete(m.id) : undefined}
-          >
-            {m.text || m.message || m.content || String(m.body ?? "")}
-          </MessageBubble>
+            avatar={auth?.user?.avatar}
+            username={auth?.user?.user}
+            dangerouslyHtml={m.text || m.message || m.content || String(m.body ?? "")}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function MessageBubble({ mine, children, onDelete }) {
+function Bubble({ mine, avatar, username, dangerouslyHtml, onDelete }) {
   return (
     <div className={`bubble ${mine ? "mine" : "theirs"}`}>
-      <div dangerouslySetInnerHTML={{ __html: children }} />
+      {!mine && avatar && (
+        <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 6 }}>
+          <img src={avatar} alt="" width="28" height="28" style={{ borderRadius: "50%" }} />
+          <strong>{username}</strong>
+        </div>
+      )}
+      <div dangerouslySetInnerHTML={{ __html: dangerouslyHtml }} />
       {mine && <button className="del" onClick={onDelete}>🗑</button>}
     </div>
   );
