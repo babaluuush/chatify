@@ -22,23 +22,23 @@ export async function ensureCsrf() {
 }
 
 export function loadAuth() {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   if (!token) return null;
   try {
     const payload = jwtDecode(token);
     return { token, user: payload };
   } catch {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     return null;
   }
 }
 export function saveAuth(token) {
-  localStorage.setItem("token", token);
+  sessionStorage.setItem("token", token);
   const payload = jwtDecode(token);
   return { token, user: payload };
 }
 export function clearAuth() {
-  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
 }
 
 export async function registerUser({ username, email, password }) {
@@ -58,7 +58,7 @@ export async function loginUser({ username, password }) {
   return res.data;
 }
 export async function getMessages() {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const res = await api.get("/messages", {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -66,7 +66,7 @@ export async function getMessages() {
 }
 export async function createMessage({ text }) {
   await ensureCsrf();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const res = await api.post(
     "/messages",
     { text },
@@ -80,7 +80,7 @@ export async function createMessage({ text }) {
 }
 export async function deleteMessage(id) {
   await ensureCsrf();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   await api.delete(`/messages/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
